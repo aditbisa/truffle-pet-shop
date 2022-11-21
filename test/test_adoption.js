@@ -35,4 +35,23 @@ contract("TestAdoption", function (accounts) {
     }
     assert.instanceOf(error, Error);
   });
+
+  describe("adopting a pet and retrieving account addresses", async () => {
+    let expectedAdopter;
+
+    before("adopt a pet using accounts[0]", async () => {
+      await adoption.adopt(4, { from: accounts[0] });
+      expectedAdopter = accounts[0];
+    });
+
+    it("can fetch the address of an owner by pet id", async () => {
+      const adopter = await adoption.adopters(4);
+      assert.equal(adopter, expectedAdopter);
+    });
+
+    it("can fetch the collection of all pet owners addresses", async () => {
+      const adopters = await adoption.getAdopters();
+      assert.include(adopters, expectedAdopter);
+    });
+  });
 });
